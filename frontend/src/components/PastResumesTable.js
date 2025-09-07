@@ -1,3 +1,4 @@
+// frontend/src/components/PastResumesTable.js
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
@@ -38,13 +39,16 @@ const Button = styled.button`
 
 Modal.setAppElement("#root");
 
+const API_BASE = process.env.REACT_APP_API_URL;
+
 function PastResumesTable() {
   const [resumes, setResumes] = useState([]);
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
-    axios.get("http://localhost:5000/api/resumes")
-      .then(res => setResumes(res.data.data))
+    axios
+      .get(`${API_BASE}/api/resumes`)
+      .then((res) => setResumes(res.data.data))
       .catch(() => setResumes([]));
   }, []);
 
@@ -64,7 +68,7 @@ function PastResumesTable() {
           </tr>
         </thead>
         <tbody>
-          {resumes.map(r => (
+          {resumes.map((r) => (
             <tr key={r.id}>
               <Td>{r.id}</Td>
               <Td>{r.file_name}</Td>
@@ -84,7 +88,7 @@ function PastResumesTable() {
         isOpen={!!selected}
         onRequestClose={() => setSelected(null)}
         style={{
-          content: { maxWidth: "900px", margin: "auto", inset: "50px" }
+          content: { maxWidth: "900px", margin: "auto", inset: "50px" },
         }}
       >
         <Button onClick={() => setSelected(null)}>Close</Button>
@@ -98,8 +102,9 @@ function ResumeDetailsWrapper({ id }) {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    axios.get(`http://localhost:5000/api/resumes/${id}`)
-      .then(res => setData(res.data.data))
+    axios
+      .get(`${API_BASE}/api/resumes/${id}`)
+      .then((res) => setData(res.data.data))
       .catch(() => setData(null));
   }, [id]);
 

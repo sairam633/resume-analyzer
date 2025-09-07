@@ -1,3 +1,4 @@
+// frontend/src/components/ResumeUploader.js
 import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
@@ -46,10 +47,16 @@ const Loader = styled.div`
   animation: spin 1s linear infinite;
 
   @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 `;
+
+const API_BASE = process.env.REACT_APP_API_URL;
 
 function ResumeUploader({ onUploadSuccess }) {
   const [file, setFile] = useState(null);
@@ -69,13 +76,14 @@ function ResumeUploader({ onUploadSuccess }) {
     formData.append("resume", file);
 
     try {
-      const res = await axios.post("http://localhost:5000/api/resumes/upload", formData, {
+      const res = await axios.post(`${API_BASE}/api/resumes/upload`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
       setStatus("Upload successful!");
       onUploadSuccess(res.data.data); // pass analysis result to parent
     } catch (err) {
+      console.error(err);
       setStatus("Upload failed. Try again.");
     } finally {
       setLoading(false);
